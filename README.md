@@ -14,8 +14,8 @@
 	1-2. ブロックのマイニングはBitcoinと同じ「PoW（proof-of-work）」を採用しました。  
 	1-3. 秘密鍵はBitcoinと同じ「256ビット」で作成します。  
 	1-4. 公開鍵はBitcoinと同じ「ECDSA公開鍵暗号化方式」で作成します。  
-	1-5. 残高管理は「genesis」ブロックから計算する「UTXO」型を採用しました。
-	1-6. トランザクション作成時の「UTXO」の移動には「P2PKH」方式を採用しました。
+	1-5. 残高管理は「genesis」ブロックから計算する「UTXO」型を採用しました。  
+	1-6. トランザクション作成時の「UTXO」の移動には「P2PKH」方式を採用しました。  
 2. Omodok Blockchain P2P Network  
 	2-1. ソケット通信にはBitcoinと同じ「WebSocket」を使用しました。  
 	2-2. 初回ハンドシェイク時にBitcoinと同じ「version、verack」交換を行いました。  
