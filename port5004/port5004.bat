@@ -1,0 +1,1 @@
+python.exe ../omodok_blockchain.py -p 5004

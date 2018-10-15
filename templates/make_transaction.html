@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ブロックチェーンクライアント</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">ブロックチェーンクライアント</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">ウォレットジェネレータ
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/make/transaction">取引をする</a>
+              <span class="sr-only">(現在)</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/view/transactions">トランザクションの表示</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card-body">
+            <h4 class="card-title">コインを送る</h4>
+            <p class="card-text">トランザクションの詳細を入力し、[トランザクションの生成]ボタンをクリックしてトランザクションを生成します</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+	<div id="error" style="color:red" class="container"></div>
+
+    <div class="container alert alert-secondary">
+    <form id="transaction_form">
+
+        <div class="row">
+          <label class="col-sm-2">Sender Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="sender_add" id="sender_address" rows="2" class="form-control" value="{{ address_u }}">
+
+          </div>
+        </div>
+
+        <br>
+                
+        <div class="row">
+          <label class="col-sm-2">Recipient Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="recipient_add" id="recipient_address" rows="2" class="form-control">
+          </div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+          <label class="col-sm-2">Amount to Send:</label>
+          <div class="col-sm-10">
+            <input type="text" name="amt" id="amount" rows="2" class="form-control" value="{{ UTXO }}">
+          </div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <input type="button" id="generate_transaction" class="btn btn-primary btn-lg" value="トランザクションの生成">
+          </div>
+        </div>
+
+        <br>
+
+    </form>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal modal-alert fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <div class="modal-title col-md-10">トランザクションの詳細を確認し、ブロックチェーンノードのURLを入力し、[トランザクションの確認]をクリックしてトランザクションを「ブロードキャスト送信」します。</div>
+            <button type="button" class="close col-md-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+
+          <div class="modal-body">
+
+            <form id="confirmation_transaction_form">
+
+                <div class="row">
+                  <label class="col-sm-12">Sender Address:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="sender" id="confirmation_sender_address" rows="2" class="form-control" readonly>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">Recipient Address:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="recipient" id="confirmation_recipient_address" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <label class="col-sm-12">Amount to Send:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="amount" id="confirmation_amount" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+
+                 <div class="row">
+                  <label class="col-sm-12">prev_TxID:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="prev_TxID" id="confirmation_prevTxID" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">public_key:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="public_key" id="confirmation_pubkey" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+
+               <div class="row">
+                  <label class="col-sm-12">digital_sig:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="digital_sig" id="transaction_signature" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+
+                 <div class="row">
+                  <label class="col-sm-12">TxID:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="TxID" id="confirmation_id" rows="2" class="form-control" readonly>
+                  </div>
+                </div>
+
+
+           </form>
+
+
+            <div class="row">
+              <label class="col-sm-12">Blockchain Node URL:</label>
+              <div class="col-sm-12">
+                <input type="text" name="node_url" id="node_url" rows="2" class="form-control" value="{{NodeURL}}">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">キャンセル</button>
+            <button type="button" id="button_confirm_transaction" class="btn btn-success">トランザクションの確認</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Alert Message for successful transaction -->
+    <div class="modal modal-alert fade" id="success_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="alert alert-success" role="alert">
+              <h4 class="alert-heading">成功した取引！</h4>
+              <p>あなたは正常に取引を完了しました。 次のブロックに追加されます。</p>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="button_confirm_transaction" class="btn btn-success" data-dismiss="modal">OK</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+
+      $(function () {
+          $("#generate_transaction").click(function () {
+
+            $.ajax({
+              url: "/transactions/new",
+              type: "POST",
+              dataType : 'json',
+              data: $('#transaction_form').serialize(),
+              success: function(response){
+                document.getElementById("confirmation_sender_address").value = response["sender"];
+                document.getElementById("confirmation_recipient_address").value = response["recipient"];
+                document.getElementById("confirmation_amount").value = response["amount"];
+                document.getElementById("confirmation_prevTxID").value = response["prev_TxID"];
+                document.getElementById("confirmation_pubkey").value = response["public_key"];
+                document.getElementById("transaction_signature").value = response["digital_sig"];
+                document.getElementById("confirmation_id").value = response["TxID"];
+                $("#basicModal").modal('show');
+                
+              },
+              error: function(error){
+                document.getElementById("error").innerHTML=error["responseJSON"]["warning"];
+                console.log(error);
+              }
+            });
+
+          });
+      });
+
+
+      $(function () {
+          $("#button_confirm_transaction").click(function () {
+            //console.log($('#confirmation_transaction_form').serialize());
+
+
+            $.ajax({
+              url: document.getElementById("node_url").value + "/transactions/add",
+              type: "POST",
+              headers: {'Access-Control-Allow-Origin':'*'},
+              dataType : 'json',
+              data: $('#confirmation_transaction_form').serialize(),
+              success: function(response){
+
+                //reset both forms
+                $("#transaction_form")[0].reset();
+                $("#confirmation_transaction_form")[0].reset();
+                
+                //clean text boxes
+                $("#sender_address").val("");
+                $("#recipient_address").val("");
+                $("#amount").val("");
+
+                $("#basicModal").modal('hide');
+                $("#success_transaction_modal").modal('show');
+                
+              },
+              error: function(error){
+                console.log(error);
+              }
+            });
+
+          });
+      });
+
+    </script>
+
+
+  </body>
+
+</html>
